@@ -1,13 +1,906 @@
 <!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ankit Nandal | iOS Engineer</title>
-  </head>
-  <body>
-    <h1>Ankit Nandal</h1>
-    <p>Senior iOS Engineer @ Eventbrite</p>
-    <p>Mobile Architecture & Platforms at Scale · Swift · SwiftUI</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Ankit Nandal — Senior iOS Engineer. Mobile architecture, performance, SwiftUI, Swift Concurrency." />
+  <title>Ankit Nandal | iOS Engineer</title>
+
+  <style>
+    :root{
+      --bg: #0b0d10;
+      --bg2:#0f131a;
+      --card:#111827;
+      --muted:#9aa4b2;
+      --text:#e6eaf0;
+      --border: rgba(255,255,255,.08);
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --accent: #7c3aed;
+      --accent2:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --radius: 18px;
+      --radius2: 26px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    [data-theme="light"]{
+      --bg:#f7f8fb;
+      --bg2:#ffffff;
+      --card:#ffffff;
+      --muted:#5b6472;
+      --text:#0f172a;
+      --border: rgba(15,23,42,.10);
+      --shadow: 0 18px 60px rgba(2,6,23,.10);
+      --accent:#6d28d9;
+      --accent2:#16a34a;
+      --warn:#d97706;
+      --danger:#dc2626;
+    }
+
+    *{ box-sizing: border-box; }
+    html{ scroll-behavior: smooth; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(124,58,237,.22), transparent 55%),
+        radial-gradient(900px 700px at 85% 20%, rgba(34,197,94,.14), transparent 50%),
+        radial-gradient(900px 700px at 55% 90%, rgba(245,158,11,.10), transparent 50%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg) 50%, var(--bg2) 100%);
+      line-height:1.45;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    .container{ max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* Topbar */
+    .topbar{
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(10,12,16,.55);
+      border-bottom: 1px solid var(--border);
+    }
+    [data-theme="light"] .topbar{ background: rgba(255,255,255,.75); }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 0;
+      gap: 14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap: 12px;
+      min-width: 240px;
+    }
+    .avatar{
+      width: 36px; height: 36px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), rgba(34,197,94,.7));
+      box-shadow: 0 10px 24px rgba(124,58,237,.18);
+      position: relative;
+    }
+    .avatar:after{
+      content:"";
+      position:absolute; inset:-1px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.18);
+      pointer-events:none;
+    }
+    .brand h1{ margin:0; font-size: 14px; letter-spacing:.2px; }
+    .brand p{ margin:0; font-size: 12px; color: var(--muted); }
+
+    .nav{
+      display:flex; align-items:center; gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .nav a{
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--muted);
+    }
+    .nav a:hover{ border-color: var(--border); color: var(--text); background: rgba(255,255,255,.04); }
+    .nav a.active{
+      color: var(--text);
+      border-color: rgba(124,58,237,.35);
+      background: rgba(124,58,237,.12);
+    }
+
+    .actions{
+      display:flex; align-items:center; gap: 10px;
+      min-width: 240px; justify-content: flex-end;
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.07); }
+    [data-theme="light"] .btn{ background: rgba(15,23,42,.03); }
+    .btn.primary{
+      border-color: rgba(124,58,237,.35);
+      background: linear-gradient(135deg, rgba(124,58,237,.22), rgba(34,197,94,.10));
+    }
+    .btn.small{ padding: 8px 10px; border-radius: 12px; font-size: 12px; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Hero */
+    .hero{ padding: 44px 0 20px; }
+    .hero-grid{
+      display:grid; grid-template-columns: 1.3fr .7fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    @media (max-width: 940px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .brand{ min-width: auto; }
+      .actions{ min-width: auto; }
+    }
+
+    .card{
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    [data-theme="light"] .card{ background: rgba(255,255,255,.95); }
+
+    .hero-main{ padding: 24px; position: relative; }
+    .hero-main:before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      background: radial-gradient(800px 300px at 20% 0%, rgba(124,58,237,.18), transparent 70%);
+      pointer-events:none;
+    }
+    .kicker{
+      display:flex; flex-wrap:wrap; gap: 10px; align-items:center;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .title{
+      font-size: 40px;
+      letter-spacing: -.6px;
+      margin: 6px 0 10px;
+      line-height: 1.05;
+      position: relative;
+    }
+    .subtitle{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 60ch;
+      position: relative;
+    }
+    .hero-ctas{ display:flex; gap: 10px; flex-wrap: wrap; position: relative; }
+
+    .hero-side{ padding: 18px; display:flex; flex-direction: column; gap: 12px; }
+    .mini{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      padding: 14px;
+    }
+    [data-theme="light"] .mini{ background: rgba(15,23,42,.02); }
+    .mini h3{ margin:0 0 8px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; }
+    .row{ display:flex; align-items:center; justify-content:space-between; gap: 10px; }
+    .mono{ font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+    /* Sections */
+    section{ padding: 26px 0; }
+    .section-title{
+      display:flex; align-items: baseline; justify-content:space-between;
+      gap: 12px; flex-wrap: wrap;
+      margin: 0 0 12px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .1px;
+    }
+    .section-title p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Stats */
+    .stats{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 940px){ .stats{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px){ .stats{ grid-template-columns: 1fr; } }
+
+    .stat{
+      padding: 16px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      position: relative;
+      overflow:hidden;
+      cursor: default;
+    }
+    [data-theme="light"] .stat{ background: rgba(15,23,42,.02); }
+    .stat:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(400px 220px at 10% 10%, rgba(124,58,237,.18), transparent 70%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .stat .label{ color: var(--muted); font-size: 12px; position: relative; }
+    .stat .value{ font-size: 28px; margin: 4px 0 6px; font-weight: 700; letter-spacing:-.3px; position: relative; }
+    .stat .note{ color: var(--muted); font-size: 12px; position: relative; }
+
+    /* Skills */
+    .skill-controls{
+      display:flex; gap: 10px; flex-wrap: wrap; align-items:center;
+    }
+    .input{
+      flex: 1 1 260px;
+      display:flex; align-items:center; gap: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+    [data-theme="light"] .input{ background: rgba(15,23,42,.02); }
+    .input input{
+      width:100%;
+      border:0; outline:0;
+      background: transparent;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .chips{
+      display:flex; flex-wrap: wrap; gap: 8px;
+      padding: 12px 0 2px;
+    }
+    .chip{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      color: var(--text);
+      display:inline-flex; align-items:center; gap: 8px;
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select: none;
+    }
+    .chip:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); }
+    .chip[data-on="true"]{
+      border-color: rgba(124,58,237,.35);
+      background: rgba(124,58,237,.12);
+    }
+    .dot{ width: 8px; height: 8px; border-radius: 99px; background: var(--accent); display:inline-block; }
+    .dot.green{ background: var(--accent2); }
+    .dot.warn{ background: var(--warn); }
+    .dot.red{ background: var(--danger); }
+
+    /* Experience */
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items:start;
+    }
+    @media (max-width: 940px){ .grid-2{ grid-template-columns: 1fr; } }
+
+    .accordion{
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+    }
+    [data-theme="light"] .accordion{ background: rgba(15,23,42,.02); }
+
+    details{
+      border-top: 1px solid var(--border);
+    }
+    details:first-child{ border-top: 0; }
+    summary{
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    summary::-webkit-details-marker { display:none; }
+    .role{
+      display:flex; flex-direction: column; gap: 3px;
+      min-width: 0;
+    }
+    .role strong{ font-size: 13px; }
+    .role span{ font-size: 12px; color: var(--muted); }
+    .meta{
+      display:flex; align-items:center; gap: 8px; flex-wrap: wrap;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .content{
+      padding: 0 14px 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .content ul{ margin: 10px 0 0 18px; padding:0; }
+    .content li{ margin: 6px 0; color: var(--text); opacity:.88; }
+
+    /* Footer / Toast */
+    footer{ padding: 26px 0 44px; color: var(--muted); font-size: 12px; }
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,.65);
+      color: white;
+      border: 1px solid rgba(255,255,255,.14);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      max-width: min(520px, calc(100vw - 28px));
+      text-align: center;
+    }
+    [data-theme="light"] .toast{ background: rgba(15,23,42,.82); }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <h1>Ankit Nandal</h1>
+            <p>Senior iOS Engineer • Mobile Architecture • SwiftUI</p>
+          </div>
+        </div>
+
+        <nav class="nav" id="nav">
+          <a href="#home" class="active">Home</a>
+          <a href="#highlights">Highlights</a>
+          <a href="#skills">Skills</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="actions">
+          <button class="btn small" id="themeBtn" type="button" aria-label="Toggle theme">
+            <span id="themeIcon">🌙</span><span class="mono" id="themeLabel">Dark</span>
+          </button>
+          <a class="btn primary" href="assets/Ankit10.pdf" target="_blank" rel="noopener">
+            ⬇️ Resume
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="home" class="container">
+    <div class="hero">
+      <div class="hero-grid">
+        <div class="card hero-main">
+          <div class="kicker">
+            <span class="pill">Staff-level scope</span>
+            <span class="pill">Swift Concurrency</span>
+            <span class="pill">Modular iOS platforms</span>
+          </div>
+
+          <div class="title">Building fast, modular iOS apps that scale.</div>
+          <p class="subtitle">
+            Staff-level iOS Engineer with 9+ years building high-performance, modular mobile apps with SwiftUI,
+            Swift Concurrency (async/await, actors), and clean architectures (TCA/VIPER/MVVM).  
+          </p>
+
+          <div class="hero-ctas">
+            <a class="btn primary" href="#experience">See experience →</a>
+            <button class="btn" id="copyEmailBtn" type="button">📋 Copy email</button>
+            <button class="btn" id="copyPhoneBtn" type="button">📋 Copy phone</button>
+          </div>
+        </div>
+
+        <div class="card hero-side">
+          <div class="mini">
+            <h3>Location</h3>
+            <div class="row">
+              <div><strong>Delhi, India</strong></div>
+              <div class="mono">IST</div>
+            </div>
+          </div>
+
+          <div class="mini">
+            <h3>Focus</h3>
+            <div class="chips">
+              <span class="chip" style="cursor:default"><span class="dot"></span>Performance</span>
+              <span class="chip" style="cursor:default"><span class="dot green"></span>Architecture</span>
+              <span class="chip" style="cursor:default"><span class="dot warn"></span>DX / CI-CD</span>
+              <span class="chip" style="cursor:default"><span class="dot red"></span>Reliability</span>
+            </div>
+          </div>
+
+          <div class="mini">
+            <h3>Links</h3>
+            <div class="row">
+              <a class="btn small" href="https://www.linkedin.com/in/ankitnandal/" target="_blank" rel="noopener">in LinkedIn</a>
+              <a class="btn small" href="#contact">✉️ Contact</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <section id="highlights">
+      <div class="section-title">
+        <h2>Highlights</h2>
+        <p>Animated metrics + what I optimized.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat" data-counter data-to="53" data-suffix="%" data-label="App size reduction" data-note="278MB → 130MB (INDMoney)">
+          <div class="label">App size reduction</div>
+          <div class="value" aria-label="App size reduction"><span class="count">0</span></div>
+          <div class="note">278MB → 130MB</div>
+        </div>
+
+        <div class="stat" data-counter data-to="78" data-suffix="%" data-label="Startup improvement" data-note="~1800ms → 380ms (INDMoney)">
+          <div class="label">Startup improvement</div>
+          <div class="value"><span class="count">0</span></div>
+          <div class="note">~1800ms → 380ms</div>
+        </div>
+
+        <div class="stat" data-counter data-to="40" data-suffix="%" data-label="Fewer production bugs" data-note="Testing frameworks rollout (Eventbrite)">
+          <div class="label">Fewer production bugs</div>
+          <div class="value"><span class="count">0</span></div>
+          <div class="note">Automated testing adoption</div>
+        </div>
+
+        <div class="stat" data-counter data-to="6" data-suffix="+" data-label="Developers mentored" data-note="Standards + governance">
+          <div class="label">Developers mentored</div>
+          <div class="value"><span class="count">0</span></div>
+          <div class="note">Standards + architecture governance</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-title">
+        <h2>Skills</h2>
+        <p>Search + filter to show what you care about.</p>
+      </div>
+
+      <div class="skill-controls">
+        <div class="input" role="search">
+          🔎 <input id="skillSearch" placeholder="Search (e.g., SwiftUI, Actors, GraphQL, TCA)..." />
+        </div>
+        <button class="btn small" id="clearFiltersBtn" type="button">Clear filters</button>
+      </div>
+
+      <div class="chips" id="skillFilters">
+        <span class="chip" data-filter="ui"><span class="dot"></span>UI</span>
+        <span class="chip" data-filter="arch"><span class="dot green"></span>Architecture</span>
+        <span class="chip" data-filter="concurrency"><span class="dot warn"></span>Concurrency</span>
+        <span class="chip" data-filter="network"><span class="dot red"></span>Networking</span>
+      </div>
+
+      <div class="chips" id="skillsList" aria-live="polite"></div>
+    </section>
+
+    <section id="experience">
+      <div class="section-title">
+        <h2>Experience</h2>
+        <p>Accordion view (open to read key responsibilities).</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="accordion" id="expAccordion">
+          <details open>
+            <summary>
+              <div class="role">
+                <strong>Senior Software Engineer (iOS) • Eventbrite</strong>
+                <span>Mar 2024 — Present</span>
+              </div>
+              <div class="meta">
+                <span class="pill">SwiftUI</span>
+                <span class="pill">SPM</span>
+                <span class="pill">Actors</span>
+              </div>
+            </summary>
+            <div class="content">
+              <ul>
+                <li>Led architecture modernization across Identity & Core modules; defined technical vision using SwiftUI, SPM, modular frameworks.</li>
+                <li>Established reactive architecture leveraging Combine + async/await + actors.</li>
+                <li>Defined CI/CD + developer experience roadmap to improve build reliability and deployment efficiency.</li>
+                <li>Introduced XCTest + Quick/Nimble automated testing to reduce production bugs (~40%).</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <div class="role">
+                <strong>Principal Software Engineer (iOS) • INDMoney</strong>
+                <span>Apr 2022 — Feb 2024</span>
+              </div>
+              <div class="meta">
+                <span class="pill">Performance</span>
+                <span class="pill">Modular</span>
+                <span class="pill">WebSocket</span>
+              </div>
+            </summary>
+            <div class="content">
+              <ul>
+                <li>Led performance refactors: reduced app size by 53% and improved launch time by 78%.</li>
+                <li>Designed modular frameworks enabling new screen releases without full app updates.</li>
+                <li>Rewrote networking layer; integrated WebSocket for real-time market data.</li>
+                <li>Adopted SwiftUI + dark mode to improve UI consistency and accessibility.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <div class="role">
+                <strong>Senior iOS Developer • Deutsche Telekom Digital Labs (T-Mobile)</strong>
+                <span>Nov 2018 — Apr 2022</span>
+              </div>
+              <div class="meta">
+                <span class="pill">Multi-country</span>
+                <span class="pill">Modular</span>
+              </div>
+            </summary>
+            <div class="content">
+              <ul>
+                <li>Core contributor to multi-country telecom suite (10+ app variants, millions of users).</li>
+                <li>Built foundational architecture from scratch using clean, modular patterns.</li>
+                <li>Automated dependency management and build scripts to improve maintainability.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <div class="role">
+                <strong>Senior iOS Developer • GlobalLogic</strong>
+                <span>Dec 2017 — Nov 2018</span>
+              </div>
+              <div class="meta">
+                <span class="pill">Security</span>
+                <span class="pill">CI/CD</span>
+              </div>
+            </summary>
+            <div class="content">
+              <ul>
+                <li>Delivered iOS features for enterprise clients with high security and reliability standards.</li>
+                <li>Improved CI/CD and introduced code quality tooling (SwiftLint, Fastlane).</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <div class="role">
+                <strong>iOS Developer • Tanzanite Infotech</strong>
+                <span>Apr 2015 — Nov 2017</span>
+              </div>
+              <div class="meta">
+                <span class="pill">Objective-C</span>
+                <span class="pill">UIKit</span>
+              </div>
+            </summary>
+            <div class="content">
+              <ul>
+                <li>Built multiple client projects using Objective-C and Swift.</li>
+                <li>Transitioned legacy UIKit codebases to Swift and modern architectures.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+
+        <div class="card" style="padding:18px">
+          <div class="section-title" style="margin-bottom:8px">
+            <h2>What I’m known for</h2>
+            <p>Pulling hard problems into crisp systems.</p>
+          </div>
+
+          <div class="chips" style="padding-top:6px">
+            <span class="chip" style="cursor:default"><span class="dot green"></span>Modularization + feature boundaries</span>
+            <span class="chip" style="cursor:default"><span class="dot"></span>SwiftUI migration + consistency</span>
+            <span class="chip" style="cursor:default"><span class="dot warn"></span>Async/await + Actors correctness</span>
+            <span class="chip" style="cursor:default"><span class="dot red"></span>Network reliability + realtime data</span>
+            <span class="chip" style="cursor:default"><span class="dot"></span>CI/CD + DX improvements</span>
+            <span class="chip" style="cursor:default"><span class="dot green"></span>Mentorship + governance</span>
+          </div>
+
+          <div style="margin-top:14px; color:var(--muted); font-size:13px">
+            Want to tailor this page for a specific company (Apple/Meta/Google/startups)?
+            I can add a “Case Studies” section with 2–3 deep dives (problem → constraints → decision → outcome).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="section-title">
+        <h2>Contact</h2>
+        <p>One-click copy + quick links.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="padding:18px">
+          <div class="mini" style="margin:0">
+            <h3>Email</h3>
+            <div class="row">
+              <div><strong id="emailText">iamankitnandal@gmail.com</strong></div>
+              <button class="btn small" id="copyEmailBtn2" type="button">Copy</button>
+            </div>
+          </div>
+
+          <div class="mini" style="margin-top:12px">
+            <h3>Phone</h3>
+            <div class="row">
+              <div><strong id="phoneText">+91-8376899827</strong></div>
+              <button class="btn small" id="copyPhoneBtn2" type="button">Copy</button>
+            </div>
+          </div>
+
+          <div class="mini" style="margin-top:12px">
+            <h3>LinkedIn</h3>
+            <div class="row">
+              <a class="btn small" href="https://www.linkedin.com/in/ankitnandal/" target="_blank" rel="noopener">Open</a>
+              <a class="btn small" href="assets/Ankit10.pdf" target="_blank" rel="noopener">Resume</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:18px">
+          <div class="section-title" style="margin-bottom:8px">
+            <h2>Quick note</h2>
+            <p>Editable intro blurb.</p>
+          </div>
+          <div style="color:var(--muted); font-size:13px">
+            I’m currently focused on staff-level iOS roles centered on mobile architecture, performance, and platform foundations.
+            If you’re hiring for iOS platform, app performance, or multi-team architecture work, I’d love to talk.
+          </div>
+
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn primary" href="mailto:iamankitnandal@gmail.com?subject=Hello%20Ankit%20-%20iOS%20Role">Email me</a>
+            <a class="btn" href="#highlights">See metrics</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="row">
+        <div>© <span id="year"></span> Ankit Nandal</div>
+        <div class="mono">Built with HTML/CSS/JS • GitHub Pages</div>
+      </div>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ---------- Theme ----------
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    function setTheme(mode){
+      root.setAttribute('data-theme', mode);
+      localStorage.setItem('theme', mode);
+      themeIcon.textContent = mode === 'light' ? '☀️' : '🌙';
+      themeLabel.textContent = mode === 'light' ? 'Light' : 'Dark';
+      // Improve topbar background for light mode
+      document.querySelector('.topbar').style.background =
+        (mode === 'light') ? 'rgba(255,255,255,.75)' : 'rgba(10,12,16,.55)';
+    }
+
+    const saved = localStorage.getItem('theme') || 'dark';
+    setTheme(saved);
+
+    themeBtn.addEventListener('click', () => {
+      const next = (root.getAttribute('data-theme') === 'light') ? 'dark' : 'light';
+      setTheme(next);
+      toast(`Theme: ${next}`);
+    });
+
+    // ---------- Toast ----------
+    const toastEl = document.getElementById('toast');
+    let toastTimer = null;
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 1400);
+    }
+
+    // ---------- Copy helpers ----------
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        toast('Copied ✅');
+      }catch{
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        toast('Copied ✅');
+      }
+    }
+
+    const email = document.getElementById('emailText').textContent.trim();
+    const phone = document.getElementById('phoneText').textContent.trim();
+
+    document.getElementById('copyEmailBtn').addEventListener('click', ()=> copyText(email));
+    document.getElementById('copyPhoneBtn').addEventListener('click', ()=> copyText(phone));
+    document.getElementById('copyEmailBtn2').addEventListener('click', ()=> copyText(email));
+    document.getElementById('copyPhoneBtn2').addEventListener('click', ()=> copyText(phone));
+
+    // ---------- Animated counters ----------
+    const counters = [...document.querySelectorAll('[data-counter]')];
+    function animateCounter(el){
+      const to = Number(el.dataset.to || '0');
+      const suffix = el.dataset.suffix || '';
+      const out = el.querySelector('.count');
+      const duration = 900;
+      const start = performance.now();
+      const from = 0;
+
+      function frame(now){
+        const t = Math.min(1, (now - start) / duration);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = Math.round(from + (to - from) * eased);
+        out.textContent = `${val}${suffix}`;
+        if(t < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          animateCounter(e.target);
+          counterObserver.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.35 });
+
+    counters.forEach(c => counterObserver.observe(c));
+
+    // ---------- Skills (search + filter) ----------
+    const skills = [
+      { name: 'SwiftUI', tags: ['ui'] },
+      { name: 'UIKit', tags: ['ui'] },
+      { name: 'Swift', tags: ['arch'] },
+      { name: 'Combine', tags: ['concurrency'] },
+      { name: 'Async/Await', tags: ['concurrency'] },
+      { name: 'Actors', tags: ['concurrency'] },
+      { name: 'SPM (Swift Package Manager)', tags: ['arch'] },
+      { name: 'TCA (The Composable Architecture)', tags: ['arch'] },
+      { name: 'VIPER', tags: ['arch'] },
+      { name: 'MVVM', tags: ['arch'] },
+      { name: 'GraphQL', tags: ['network'] },
+      { name: 'REST', tags: ['network'] },
+      { name: 'WebSocket', tags: ['network'] },
+      { name: 'XCTest', tags: ['arch'] },
+      { name: 'Quick & Nimble', tags: ['arch'] },
+      { name: 'Fastlane', tags: ['arch'] },
+      { name: 'GitHub Actions', tags: ['arch'] },
+      { name: 'SwiftLint', tags: ['arch'] },
+    ];
+
+    const skillsList = document.getElementById('skillsList');
+    const skillSearch = document.getElementById('skillSearch');
+    const filterChips = [...document.querySelectorAll('#skillFilters .chip')];
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+
+    let activeFilters = new Set();
+
+    function renderSkills(){
+      const q = (skillSearch.value || '').trim().toLowerCase();
+      const filtered = skills.filter(s => {
+        const matchesText = !q || s.name.toLowerCase().includes(q);
+        const matchesFilters = activeFilters.size === 0 || s.tags.some(t => activeFilters.has(t));
+        return matchesText && matchesFilters;
+      });
+
+      skillsList.innerHTML = filtered.map(s => {
+        const tag = s.tags[0] || 'arch';
+        const dotClass = (tag === 'ui') ? '' : (tag === 'arch') ? 'green' : (tag === 'concurrency') ? 'warn' : 'red';
+        return `<span class="chip" style="cursor:default"><span class="dot ${dotClass}"></span>${s.name}</span>`;
+      }).join('');
+
+      if(filtered.length === 0){
+        skillsList.innerHTML = `<span class="pill">No matches. Try a different keyword or clear filters.</span>`;
+      }
+    }
+
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const key = chip.dataset.filter;
+        const on = chip.dataset.on === 'true';
+        chip.dataset.on = (!on).toString();
+        if(!on) activeFilters.add(key); else activeFilters.delete(key);
+        renderSkills();
+      });
+    });
+
+    skillSearch.addEventListener('input', renderSkills);
+    clearFiltersBtn.addEventListener('click', () => {
+      activeFilters.clear();
+      filterChips.forEach(c => c.dataset.on = 'false');
+      skillSearch.value = '';
+      renderSkills();
+      toast('Filters cleared');
+    });
+
+    renderSkills();
+
+    // ---------- Scrollspy ----------
+    const navLinks = [...document.querySelectorAll('#nav a')];
+    const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+    const spy = new IntersectionObserver((entries) => {
+      // Pick the most visible entry
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if(!visible) return;
+
+      const id = visible.target.getAttribute('id');
+      navLinks.forEach(a => {
+        const href = a.getAttribute('href').slice(1);
+        a.classList.toggle('active', href === id);
+      });
+    }, { threshold: [0.2, 0.4, 0.6], rootMargin: "-10% 0px -60% 0px" });
+
+    sections.forEach(s => spy.observe(s));
+
+    // ---------- Misc ----------
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
